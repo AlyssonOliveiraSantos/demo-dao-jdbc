@@ -73,7 +73,41 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public List<Seller> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+      
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = conn.prepareStatement(
+                    "SELECT seller.*,department.Name as DepName "
+                    + "FROM seller INNER JOIN department "
+                    + "ON seller.DepartmentId = department.Id "
+                    + "ORDER BY Name");
+            
+            
+            rs = st.executeQuery();
+
+            List<Seller> list = new ArrayList<>();
+            Map<Integer, Department> map = new HashMap<>();
+
+            while (rs.next()) {
+                Department dept = map.get(rs.getInt("DepartmentId"));
+                
+                if (dept == null) {
+                    dept = instancianteDepartment(rs);
+                    map.put(rs.getInt("DepartmentId"), dept);
+
+                }
+                Seller obj = instancianteSeller(rs, dept);
+                list.add(obj);
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new db.DbIntegrityException("Error findBy Seller: " + e);
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+        } 
     }
 
     private Department instancianteDepartment(ResultSet rs) throws SQLException {
