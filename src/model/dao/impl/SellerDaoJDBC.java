@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import model.entites.Department;
 import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -54,17 +56,9 @@ public class SellerDaoJDBC implements SellerDao {
             rs = st.executeQuery();
             
             if(rs.next()){
-                Department dept = new Department();
-                dept.setId(rs.getInt("DepartmentId"));
-                dept.setName(rs.getString("DepName"));
+                Department dept = instancianteDepartment(rs);
                 
-                Seller obj = new Seller();
-                obj.setId(rs.getInt("Id"));
-                obj.setName(rs.getString("Name"));
-                obj.setEmail(rs.getString("Email"));
-                obj.setBaseSalary(rs.getDouble("BaseSalary"));
-                obj.setBirthDate(rs.getDate("BirthDate"));
-                obj.setDepartment(dept);
+                Seller obj = instancianteSeller(rs, dept);
                 return obj;
             }
             return null;
@@ -81,6 +75,25 @@ public class SellerDaoJDBC implements SellerDao {
     @Override
     public List<Seller> findAll() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private Department instancianteDepartment(ResultSet rs) throws SQLException {
+            Department dept = new Department();
+            dept.setId(rs.getInt("DepartmentId"));
+            dept.setName(rs.getString("DepName"));
+            return dept;
+        
+    }
+
+    private Seller instancianteSeller(ResultSet rs, Department dept) throws SQLException{
+      Seller obj = new Seller();
+                obj.setId(rs.getInt("Id"));
+                obj.setName(rs.getString("Name"));
+                obj.setEmail(rs.getString("Email"));
+                obj.setBaseSalary(rs.getDouble("BaseSalary"));
+                obj.setBirthDate(rs.getDate("BirthDate"));
+                obj.setDepartment(dept); 
+                return obj;
     }
 
 }
