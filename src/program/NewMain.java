@@ -32,12 +32,16 @@ public class NewMain {
         departmentDao.update(department);
         System.out.println(department);
         
-        System.out.println("===== TEST 3: Department FindById =====");
+        System.out.println("===== TEST 3: Department Delete =====");
+         departmentDao.deleteById(8);
+        
+        System.out.println("===== TEST 4: Department FindById =====");
         department = departmentDao.findById(2);
         System.out.println(department);
         
         
-        System.out.println("===== TEST 3: Department FindById =====");
+        
+        System.out.println("===== TEST 5: Department Findall =====");
         List<Department> list = departmentDao.findAll();
         System.out.println(list);
         
